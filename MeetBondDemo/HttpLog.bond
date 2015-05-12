@@ -1,0 +1,17 @@
+namespace HttpLog
+
+using DateTime = int64;
+
+enum HttpVerb
+{
+	GET = 1,
+	POST = 2
+}
+
+struct HttpRequest
+{
+	1: HttpVerb Verb;
+	2: DateTime When;
+	3: string Url = "http://localhost";
+	4: map<string, string> Headers;
+}
