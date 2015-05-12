@@ -2,11 +2,28 @@
 
 ## Intro
 
-I bet every experienced developer has been working with data serialization at least once. Let's recap where this matters most:
+All developers use data serialization, either explicitly or implicitly. Let's recap where serialization used most:
 
-* Save and restore your business data in files or streams
-* Passing messages in networks
-* Objects persistence in NoSQL, BigData
+* Data persistence in files or streams
+* Data persistence in NoSQL, BigData
+* Passing data in networks
+* Passing data in IPC, etc.
+
+All these use cases have one thing in common: all components accessing data must have data schema and must understand wire format.
+This may not be an issue for a single-piece software, but it becomes critical for applications having many components written in several languages,
+running on various platforms and having different lifetime.
+
+Data schema serves two purposes: to define data structure (hierarchy, relations, order) and to define semantic meaning (age means number of years since born).
+No matter what programming language is using - the data structure and data semantic must remain the same.
+
+If data schema defines `What`, then wire format should define `How` data needs to be persisted on the wire.
+For instance, Strings can persist as UTF8 or UTF32, Integers can persist as decimal strings or as little endian double machine words.
+Data on the wire can be intervealed with some meta information so the right term would be the protocol.
+Some protocols can be well suited for human eyes (JSON, XML), but most of them designed for fast and space-efficient encoding.
+
+>>>>>>>>>
+TODO HERE
+>>>>>>>>>
 
 There should be no issues if your scope is limited to a single piece of software and your software lifetime is shorter that your life. That nice time had passed away. Nowadays we are all building software components. We all want our components to be reused and seamlessly integrate with each other. To make this happen, you need to have well-defined IO. By saying "well-defined" I mean that your IO must have a contract expressed in a DSL (domain-specific language) that would guarantee other components you speak the same language. As long as all components obey the same contract, they are fine. Nonetheless to say this is vital for heterogeneous systems built by giants like Google, Facebook, Amazon, Microsoft...
 
