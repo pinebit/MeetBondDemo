@@ -1,22 +1,24 @@
 # Meet Bond, Microsoft Bond
 
-## Retrospective
+## Intro
 
-A long time ago, when different programming languages were used across many platforms and architectures, developers wanted to have a mean to exchange the schematized data among them all. In particular, developers were looking for a unified approach to define complex data schema, to express the schema in many mainstream languages (such as C++, C# and others) and finally - to be able to serialize the actual data back and forth that is matching the schema.
+I bet every experienced developer has been working with data serialization at least once. Let's recap where this matters most:
 
-This became critical for heterogeneous systems built by giants like Google, Facebook, Amazon and many others. That said you must be aware of at least one of these:
+* Save and restore your business data in files or streams
+* Passing messages in networks
+* Objects persistence in NoSQL databases
+
+There should be no issues if your scope is limited to a single piece of software and your software lifetime is short. That nice time had passed away. Nowadays we are all building software components. We all want our components to be reused and seamlessly integrate to each other. To make this happen, you need to have well-defined IO. By saying "well-defined" I mean that your IO must have a contract expressed in a DSL (domain-specific language) that would guarantee other components you speak the same language. Nonetheless to say this is vital for heterogeneous systems built by giants like Google, Facebook, Amazon, Microsoft...
+
+Rivalry led to a number of incompatible DSLs and frameworks, each giant has built for its own needs. I hope you've heard of at least one of these:
 
 * Google Inc. - [Google Protocol Buffers](https://developers.google.com/protocol-buffers/)
 * Facebook Inc. - [Thrift](http://thrift.apache.org/), which is now maintained by Apache
 * Apache Foundation Software - [Avro](http://avro.apache.org/) 
 
-Also, let's not forget the well-known serialization mechanisms, such as JSON, XML, MessagePack, ASN.1, which are well integrated in mainstream languages.
+Microsoft has many online services too and therefore it has the same needs. Just think about Bing, MSN, AdCenter, Azure and many others services demanding seamless interoperability. There was an internal technology created for that purpose which was pretty good, but it did not address newer use cases defined by rapidly growing online services division. Here's where Microsoft Bond was born. For several years, Bond remained an internal use only technology, but since Microsoft has decided to go Open Source - Bond has been finally published on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)).
 
-Microsoft had the same needs as Google or Facebook in terms of schematized data handling, especially when it came to Bing, AdCenter and other online services. There was an internal technology created for that purpose which was pretty good, but it did not address newer use cases demanded by rapidly growing online services. Here's where Microsoft Bond was born. For several years, Bond remained an internal use only project, but since Microsoft has decided to go open source - Bond has been published on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)).
-
-It is important to highlight that this technology is new to the world, but it is quite mature for Microsoft. Just look at bing.com and related services and remember their were built with Bond.
-
-By the way, Bond works well on Linux, Windows and Mac OS X.
+That said, let's add Microsoft Bond to the list above and read this article about what Bond offers while others don't and look at few examples.  
 
 ## Why Bond is better than others?
 
