@@ -2,38 +2,48 @@
 
 ## Intro
 
-All developers use data serialization, either explicitly or implicitly. Let's recap where serialization used most:
+Bond is a new schematized data serialization framework made by Microsoft.
+
+Let's recap where data serialization used most:
 
 * Data persistence in files or streams
 * Data persistence in NoSQL, BigData
 * Passing data in networks
 * Passing data in IPC, etc.
 
-All these use cases have one thing in common: all components accessing data must have data schema and must understand wire format.
-This may not be an issue for a single-piece software, but it becomes critical for applications having many components written in several languages,
-running on various platforms and having different lifetime.
+All these applications deal with schematized data: a data having schema. 
+Data schema serves two purposes: to define data structure (hierarchy, relations, order) and to define semantic (age means number of years since born).
+Data schema is normally defined in a DSL (domain-specific language), persisted in a certain format (XSD, proto, bond) and intended for sharing among
+all components in a given system. Once schema is defined, code generation tools produce DTO (data transfer objects) for strongly typed languages.
+Treat schema as an essential abstraction, which is not bound to a particular programming language.   
 
-Data schema serves two purposes: to define data structure (hierarchy, relations, order) and to define semantic meaning (age means number of years since born).
-No matter what programming language is using - the data structure and data semantic must remain the same.
-
-If data schema defines `What`, then wire format should define `How` data needs to be persisted on the wire.
-For instance, Strings can persist as UTF8 or UTF32, Integers can persist as decimal strings or as little endian double machine words.
-Data on the wire can be intervealed with some meta information so the right term would be the protocol.
+The second matter is data persistence on the wire. The actual data shall be serialized into a sequence of bytes.
+The sequence of bytes can be transferred or stored, and eventually deserialized back if the receiver has the data schema and knows the wire format.
+The wire format can vary. For instance, Strings can be stored as UTF8 or UTF32, Integers can be stored as decimal strings or little endian double machine words.
+Also, data on the wire can be intervealed with meta information. The wire formata are determined by protocols.
 Some protocols can be well suited for human eyes (JSON, XML), but most of them designed for fast and space-efficient encoding.
 
->>>>>>>>>
-TODO HERE
->>>>>>>>>
+Data serialization frameworks provide all of the above in one box:
 
-There should be no issues if your scope is limited to a single piece of software and your software lifetime is shorter that your life. That nice time had passed away. Nowadays we are all building software components. We all want our components to be reused and seamlessly integrate with each other. To make this happen, you need to have well-defined IO. By saying "well-defined" I mean that your IO must have a contract expressed in a DSL (domain-specific language) that would guarantee other components you speak the same language. As long as all components obey the same contract, they are fine. Nonetheless to say this is vital for heterogeneous systems built by giants like Google, Facebook, Amazon, Microsoft...
+* DSL
+* Code generators
+* Protocols
 
-Rivalry led to a number of incompatible DSLs and frameworks, each giant has built for its own needs. I hope you've heard of at least one of these:
+Microsoft Bond is not an exception: it provides powerful DSL, code generators for C++ and C# and several protocols implemented for .NET and native.
+All of these work well in Windows, Linux and Mac OS X, enabling seamless schematized data exchange. 
+
+## Competitors
+
+Rivalry led to a number of incompatible DSLs and protocols, each software giant has built:
 
 * Google Inc. - [Google Protocol Buffers](https://developers.google.com/protocol-buffers/)
 * Facebook Inc. - [Thrift](http://thrift.apache.org/), which is now maintained by Apache
 * Apache Foundation Software - [Avro](http://avro.apache.org/) 
 
-Microsoft has many online services too and therefore it has the same needs. Just think about Bing, MSN, AdCenter, Azure and many other services demanding seamless interoperability. There was an internal technology created for that purpose which was pretty good, but it did not address newer use cases defined by rapidly growing online services division. Here's where Microsoft Bond was born. For several years, Bond remained an internal use only technology, but since Microsoft has decided to go Open Source - Bond has been finally published on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)).
+Microsoft has many services too (Bing, MSN, AdCenter, Azure and others) demanding seamless interoperability.
+There was an internal technology created for that purpose which was pretty good,
+but it did not address newer use cases defined by rapidly growing online services division.
+Here's where Microsoft Bond was born. For several years, Bond remained an internal use only technology, but since Microsoft has decided to go Open Source - Bond has been finally published on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)).
 
 That said, let's add Microsoft Bond to the list above and read this article about what Bond offers and look at few examples.
 
