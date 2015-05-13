@@ -72,18 +72,16 @@ Sometimes, having better DSL is way more important than having few percent diffe
 Other than speed, the space-efficient encodings supported by some protocols could also be important.
 I encourage you to do a performance/space comparison with your domain specific data. This is the only way to estimate all benefits you could get from a particular framework.  
 
-This article comes with [the demo project](https://github.com/pinebit/MeetBondDemo) that uses both Microsoft Bond and Google ProtoBuffers to demonstrate DSL usage of both and to measure some protocols performance as well as serialized output size.
+This article comes with [the demo project](https://github.com/pinebit/MeetBondDemo) that demonstrates Bond framework usage by reading all records from Windows Application Event Log,
+serializing them as Bond objects and deserialize them back. 
 
 > To build and run the demo, you don't need to install any software other than Visual Studio. 
- 
-Here are few numbers I've got on my workstation:
-TBD
 
 ## Using Bond
 
 ### Getting Bond
 
-Check [the official guide on getting Bond](https://github.com/Microsoft/bond) for your platform(s):
+Check [the official guide on getting Bond](https://github.com/Microsoft/bond) for your platform(s).
 
 For .NET projects this is as simple as:
 
@@ -93,7 +91,7 @@ For .NET projects this is as simple as:
 
 The package includes:
 
-* Code generator (gdc.exe) in bin folder
+* Code generator (gbc.exe) in bin folder
 * .NET libraries
 * MSBuild tasks
 
@@ -102,7 +100,7 @@ The package includes:
 The workflow includes the following steps:
 
 * Learn DSL and define data schema by writing `.bond` file(s)
-* Use code generator (`gdc.exe`) to get DTOs for your programming language
+* Use code generator (`gbc.exe`) to get DTOs for your programming language
 * Reference the generated files as well as Bond runtime libraries in your project
 
 Consider using MSBuild tasks provided with the framework to automate code generation step.
@@ -192,7 +190,7 @@ Whatever you decided to do regarding Bond, I recommend you to contact [Adam Sape
 ## Links
 
 * [Microsoft Bond project on GitHub](https://github.com/Microsoft/bond)
-* ["Why Bond" article](https://microsoft.github.io/bond/why_bond.html)
-* ["A Young Person's Guide to C#"](https://microsoft.github.io/bond/manual/bond_cs.html)
-* ["A Young Person's Guide to C++"](https://microsoft.github.io/bond/manual/bond_cpp.html)
-* ["Python bindings to Bond"](https://microsoft.github.io/bond/manual/bond_py.html)
+* [Why Bond](https://microsoft.github.io/bond/why_bond.html)
+* [A Young Person's Guide to C#](https://microsoft.github.io/bond/manual/bond_cs.html)
+* [A Young Person's Guide to C++](https://microsoft.github.io/bond/manual/bond_cpp.html)
+* [Python bindings to Bond](https://microsoft.github.io/bond/manual/bond_py.html)

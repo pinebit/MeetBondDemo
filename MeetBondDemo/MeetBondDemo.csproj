@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BondTypeAliasConverter.cs" />
+    <Compile Include="Reader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -60,9 +61,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <BondCodegen Include="HttpLog.bond" />
+    <BondCodegen Include="EventLog.bond" />
     <!-- Resharper Workaround -->
-    <Compile Include="$(IntermediateOutputPath)\HttpLog_types.cs" Condition="False" />
+    <Compile Include="$(IntermediateOutputPath)\EventLog_types.cs" Condition="False" />
     <!-- End Resharper Workaround -->
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

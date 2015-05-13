@@ -1,0 +1,22 @@
+namespace EventLog
+
+using DateTime = int64;
+
+enum EventLevel
+{
+	LogAlways,
+	Critical,
+	Error,
+	Warning,
+	Informational,
+	Verbose
+}
+
+struct EventRecordData
+{
+	1: int32 Id;
+	2: EventLevel Level;
+	3: string ProviderName;
+	4: nullable<DateTime> TimeCreated;
+	5: vector<string> Properties;
+}
