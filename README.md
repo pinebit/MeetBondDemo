@@ -13,26 +13,27 @@ Let's recap where data serialization used most:
 
 All these applications deal with schematized data: a data having schema. 
 Data schema serves two purposes: to define data structure (hierarchy, relations, order) and to define semantic (age means number of years since born).
-Data schema is normally defined in a DSL (domain-specific language), persisted in a certain format (XSD, proto, bond) and intended for sharing among
+Data schema is normally defined as a DSL (domain-specific language), persisted in a certain format (XSD, proto, bond) and intended for sharing among
 all components in a given system. Once schema is defined, code generation tools produce DTO (data transfer objects) for strongly typed languages.
-Treat schema as an essential abstraction, which is not bound to a particular programming language.   
 
-The second matter is data persistence on the wire. The actual data shall be serialized into a sequence of bytes.
-The sequence of bytes can be transferred or stored, and eventually deserialized back if the receiver has the data schema and knows the wire format.
+The second matter is the data persistence on the wire. The actual data shall be serialized into a sequence of bytes.
+The resulting sequence of bytes can be transferred or stored, and of course, deserialized back if the receiver has the data schema and knows the wire format.
 The wire format can vary. For instance, Strings can be stored as UTF8 or UTF32, Integers can be stored as decimal strings or little endian double machine words.
-Also, data on the wire can be intervealed with meta information. The wire formata are determined by protocols.
+Also, data on the wire can be interleaved with meta information. The wire format with optional metadata is determined by a protocol.
 Some protocols can be well suited for human eyes (JSON, XML), but most of them designed for fast and space-efficient encoding.
 
-Data serialization frameworks provide all of the above in one box:
+All modern data serialization frameworks provide all of the above in one box:
 
 * DSL
 * Code generators
 * Protocols
 
 Microsoft Bond is not an exception: it provides powerful DSL, code generators for C++ and C# and several protocols implemented for .NET and native.
-All of these work well in Windows, Linux and Mac OS X, enabling seamless schematized data exchange. 
+All of these work well in Windows, Linux and Mac OS X, enabling seamless schematized data exchange.
 
-## Competitors
+For several years, Bond remained an internal use only technology, but since Microsoft moves towards Open Source - Bond has been made available on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)). 
+
+### Competitors
 
 Rivalry led to a number of incompatible DSLs and protocols, each software giant has built:
 
@@ -40,18 +41,13 @@ Rivalry led to a number of incompatible DSLs and protocols, each software giant 
 * Facebook Inc. - [Thrift](http://thrift.apache.org/), which is now maintained by Apache
 * Apache Foundation Software - [Avro](http://avro.apache.org/) 
 
-Microsoft has many services too (Bing, MSN, AdCenter, Azure and others) demanding seamless interoperability.
-There was an internal technology created for that purpose which was pretty good,
-but it did not address newer use cases defined by rapidly growing online services division.
-Here's where Microsoft Bond was born. For several years, Bond remained an internal use only technology, but since Microsoft has decided to go Open Source - Bond has been finally published on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)).
+Each of them has pros and cons, so you can choose from them based on your needs.
 
-That said, let's add Microsoft Bond to the list above and read this article about what Bond offers and look at few examples.
-
-## Why Bond?
+### Why Bond?
 
 The official answer to this question is here: ["Why Bond"](https://microsoft.github.io/bond/why_bond.html).
 
-Here is my answer:
+Here is the quick summary:
 
 * Bond supports rich type system including generics
 * Bond supports schema versioning and two-way compatibility
@@ -60,24 +56,58 @@ Here is my answer:
 * Bond supports type-safe lazy serialization: `bonded<T>`
 * Bond supports pluggable protocols (formats) with marshaling and transcoding
 
-An important note is that Bond follows "pay to play" strategy: the more features you add/use the more you pay for size and speed. This gives developers great flexibility. I've never seen the same in competitive frameworks.
+An important note is that Bond follows "pay to play" strategy: the more features you add/use the more you pay for size and speed. This gives developers great flexibility.
 
 Let's be honest and list the drawbacks as well:
 
-* Bond is targeting Microsoft stack by supporting C++ and C#, but not supporting Java (yet)
+* Bond is targeting Microsoft stack with supporting C++ and C#, but not supporting Java (yet)
 * Bond does not support union type (`oneof` in protobuf)
 
 ### What about performance?
 
-The next question I would expect to hear is "what about Bond performance?". My answer to this is as follow: Bond is nearly similar to competitors in terms of performance, but it provides greater features while others don't. If you are building a system using Microsoft stack, then Bond would be your best choice. If you are looking for precise performance metrics, I encourage you to build your own test that would deal with *your data schema* and deal with *a protocol of your choice*. You will probably notice few percent difference in speed/size, but you will also notice great features described previously.
+When it comes to compare one framework to another, developers are looking for performance comparisons.
+But let's recall that these frameworks consists of DSL, code generators and protocols.
+If you consider protocols performance only, then you will miss the features provided by DSL and codegens.
+Sometimes, having better DSL is way more important than having few percent difference in serialization speed.
+Other than speed, the space-efficient encodings supported by some protocols could also be important.
+I encourage you to do a performance/space comparison with your domain specific data. This is the only way to estimate all benefits you could get from a particular framework.  
+
+This article comes with [the demo project](https://github.com/pinebit/MeetBondDemo) that uses both Microsoft Bond and Google ProtoBuffers to demonstrate DSL usage of both and to measure some protocols performance as well as serialized output size.
+
+> To build and run the demo, you don't need to install any software other than Visual Studio. 
+ 
+Here are few numbers I've got on my workstation:
+TBD
 
 ## Using Bond
 
 ### Getting Bond
 
-TBD
+Check [the official guide on getting Bond](https://github.com/Microsoft/bond) for your platform(s):
 
-### Summary on DSL (IDL) features
+For .NET projects this is as simple as:
+
+```powershell
+    install-package Bond.CSharp
+```  
+
+The package includes:
+
+* Code generator (gdc.exe) in bin folder
+* .NET libraries
+* MSBuild tasks
+
+### Workflow
+
+The workflow includes the following steps:
+
+* Learn DSL and define data schema by writing `.bond` file(s)
+* Use code generator (`gdc.exe`) to get DTOs for your programming language
+* Reference the generated files as well as Bond runtime libraries in your project
+
+Consider using MSBuild tasks provided with the framework to automate code generation step.
+
+### DSL features overview
 
 When you start writing your first `.bond` file, you will need to know its syntax and features.
 Please visit the [official documentation page](https://microsoft.github.io/bond/manual/compiler.html#idl-syntax) describing the IDL in details. Here let's review just basic features:
@@ -93,7 +123,7 @@ Please visit the [official documentation page](https://microsoft.github.io/bond/
 
 Bored? Here is an example:
 
-```
+```c_cpp
     namespace MyProject
     
     struct MyRecord
@@ -103,27 +133,20 @@ Bored? Here is an example:
     }
 ```
 
-Here,
+where:
     
 * `0` and `1` are the field ordinal numbers (can be any integers with any pace).
 * `= "Noname"` is the (optional) default value.
 
-Pretty natural for C/C++/C# developers, isn't it?
-
 ### Code generation
 
-Bond framework provides code generation tool written in ... Haskell (wow).
-Here is how to generated C# and C++ code from a `.bond` schema:
+Bond framework provides code generation tool written in Haskell.
+Here is how to generate C# and C++ code from a `.bond` schema in command line:
 
-```powershell
+```sh
     gbc c# example.bond
     gbc c++ example.bond
 ```
-
-> The current version of Bond framework also supports Python, but I did not try it yet.
-
-Bond framework also provides helpful MSBuild integration (MSBuild tasks and props) that will run code generation for you in your Visual Studio environment.
-Once generated, reference the generate file(s) to your project and link (reference) the libraries. You project is now Bond-ready.
 
 ### Supported protocols (formats)
 
@@ -138,8 +161,7 @@ Out of the box Bond supports three kinds of protocols:
 * DOM-based protocols: `SimpleJson` and `SimpleXml`
 > DOM-based protocol parse whole payload into an in-memory Data Object Model which then is queried during deserialization. Typically this kind of protocol is used to implement text based encoding such as JSON or XML.
 
-For each protocol, Bond API provides you with the corresponding Reader and Writer classes, which do the job on the actual serialization. Remember that previously you've asked me about performance: it's obviously that untagged protocol(s) would be the fastest, because they don't write auxiliary information, hence they write less data (copy less memory, etc).  
-
+For each protocol, Bond runtime library provides you with the corresponding Reader and Writer classes, which do the job on the actual serialization.
 Using the protocols is pretty straightforward and merely harder than that famous `JsonConvert.SerializeObject()`:
 
 ```csharp
@@ -158,16 +180,9 @@ Using the protocols is pretty straightforward and merely harder than that famous
     record = Deserialize<Example>.From(reader);
 ``` 
 
-## Demo
-
-If you check the official [Bond GitHub repository](https://github.com/Microsoft/bond), you'll find a plenty of demos in there demonstrating every single feature of Bond. Some people (like me) however, would prefer a demo that is as closer to the real life scenario as possible. Specially for this article, I have cooked such a demo. This will let you play with Bond in Visual Studio (2012 onward) and even measure size and speed:
-[See MeetBondDemo on my GitHub](https://github.com/pinebit/MeetBondDemo)
-
-> To build and run the demo, you don't need to install any software other than Visual Studio. 
-
 ## Ideas
 
-If you love Bond, and if you have a plenty of spare time for coding, consider taking one of these items into development. I won't be enumerating all benefits you may get from contributing, but I know many developers are looking for something to contribute to and become a superstar!
+If you love Bond, and if you have a plenty of spare time for coding, consider taking one of these items into development. I won't be enumerating all benefits you may get from contributing, but I know many developers are looking for ideas to contribute to:
 
 * Implement a port to Java. Replace Java with other mainstream language at your choice.
 * Implement Bond schema import/export to exchange with other DSLs (e.g. `.proto <=> .bond`).
