@@ -2,45 +2,63 @@
 
 ## Intro
 
-Bond is a new schematized data serialization framework made by Microsoft.
+Bond is a new serialization framework for schematized data created by Microsoft.
 
 Let's recap where data serialization used most:
 
-* Data persistence in files or streams
-* Data persistence in NoSQL, BigData
-* Passing data in networks
-* Passing data in IPC, etc.
+* Data persistence in files, streams, NoSQL, BigData
+* Data transmission in networks, IPC, etc.
 
-All these applications deal with schematized data: a data having schema. 
-Data schema serves two purposes: to define data structure (hierarchy, relations, order) and to define semantic (age means number of years since born).
-Data schema is normally defined as a DSL (domain-specific language), persisted in a certain format (XSD, proto, bond) and intended for sharing among
-all components in a given system. Once schema is defined, code generation tools produce DTO (data transfer objects) for strongly typed languages.
+In common, these applications have to deal with schematized data, where schema means:
 
-The second matter is the data persistence on the wire. The actual data shall be serialized into a sequence of bytes.
-The resulting sequence of bytes can be transferred or stored, and of course, deserialized back if the receiver has the data schema and knows the wire format.
-The wire format can vary. For instance, Strings can be stored as UTF8 or UTF32, Integers can be stored as decimal strings or little endian double machine words.
-Also, data on the wire can be interleaved with meta information. The wire format with optional metadata is determined by a protocol.
-Some protocols can be well suited for human eyes (JSON, XML), but most of them designed for fast and space-efficient encoding.
+* Structure: hierarchy, relations, order
+* Semantic: age is number of years since born.
 
-All modern data serialization frameworks provide all of the above in one box:
+Actually, any date has schema even if it is implicitly defined or supported by your programming language out-of-box.
+When it comes to complex data structures, we end up writing supporting data transfer objects (DTOs) and code responsible for IO, often in different languages.
+As soon as it grows and evolves, it quickly becomes a nightmare to maintain all of these. Here is where the serialization frameworks can help.   
 
-* DSL
-* Code generators
-* Protocols
+First of all, any serialization framework defines an abstraction of data schema definition that is not bound to a particular programming language or platform.
+This abstraction is known as [DSL (domain-specific language)](http://en.wikipedia.org/wiki/Domain-specific_language).
+Having such a DSL, we can define data schema for a particular application. The definition, in turn, can be expressed in multiple forms, but often
+serialization frameworks support a single form, which is well suited for its DSL. Too complicated? Here is one well-known example: XSD and XML.
+XSD defines a DSL, XML is (recommended) to define documents matching the XSD schema. But, you can also use `xsd.exe` to generate DTO classes matching the XSD,
+hence the generated classes are just another form. Note that your can generate XML from DTOs and vice versa and they will be semantically identical,
+because the semantic is common: it is defined with the XSD. Let's summarize: a serialization framework provides you with a DSL, which you use to
+define as many data schemas as you want in a certain format that is best supported by the given framework.
 
-Microsoft Bond is not an exception: it provides powerful DSL, code generators for C++ and C# and several protocols implemented for .NET and native.
-All of these work well in Windows, Linux and Mac OS X, enabling seamless schematized data exchange.
+The schema abstraction shall be eventually materialized in a programming language. All serialization frameworks provide special tools called code generators.
+They generate code for one of the target programming language, that is needed to represent a data schema in that language. This is ultimately required for
+strongly-typed languages, while it can be optional for duck-typed (dynamic) languages. However, code generation may not be limited to DTOs generation.
+It may also generate some helpful glue code that improves user experience when working with that serialization framework, even for dynamic languages.
+Most common example is generating so called proxy code that hides some implementation details.
 
-For several years, Bond remained an internal use only technology, but since Microsoft moves towards Open Source - Bond has been made available on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)). 
+The second matter is the data persistence on the wire. The actual data shall be eventually serialized into raw bytes or text and deserialized back.
+All serialization frameworks provide another abstraction here called protocols. A protocol defines a set of rules that define how structured data
+should be serialized or deserialized in according with its schema. Each protocol is normally implemented for all programming languages and platforms
+supported by given serialization framework. The more programming languages/platforms it supports, the more implementations it shall provide.
+Imagine a framework is willing to support JSON protocol, then it must provide JSON reader/writer for say C#, C++, Windows, Linux, etc.
+
+Let's summarize: any modern data serialization framework provides all of the following:
+
+* Abstractions: DSL and Protocols
+* Code generation tools
+* Protocol implementations
+
+Microsoft Bond is a modern data serialization framework. It provides powerful DSL and flexible protocols, code generators for C++ and C#,
+efficient protocol implementations for Windows, Linux and Mac OS X.
+
+For several years, Bond remained an internal use only technology, but since Microsoft started being Open Source, Bond has been made available on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)). 
 
 ### Competitors
 
-Rivalry led to a number of incompatible DSLs and protocols, each software giant has built:
+Rivalry led to a number of serialization frameworks to appear each software giant has built:
 
 * Google Inc. - [Google Protocol Buffers](https://developers.google.com/protocol-buffers/)
 * Facebook Inc. - [Thrift](http://thrift.apache.org/), which is now maintained by Apache
 * Apache Foundation Software - [Avro](http://avro.apache.org/) 
 
+Obviously, they are all incompatible, which is Okay unless you make your public API using one of these. 
 Each of them has pros and cons, so you can choose from them based on your needs.
 
 ### Why Bond?
