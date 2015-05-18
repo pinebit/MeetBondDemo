@@ -16,39 +16,36 @@ In common, these applications have to deal with schematized data, where schema m
 
 Actually, any date has schema even if it is implicitly defined or supported by your programming language out-of-box.
 When it comes to complex data structures, we end up writing supporting data transfer objects (DTOs) and code responsible for IO, often in different languages.
-As soon as it grows and evolves, it quickly becomes a nightmare to maintain all of these. Here is where the serialization frameworks can help.   
+As soon as it grows and evolves, it quickly becomes a nightmare to maintain all these pieces. Here is where the serialization frameworks win the game.
 
-First of all, any serialization framework defines an abstraction of data schema definition that is not bound to a particular programming language or platform.
+First of all, any serialization framework defines an abstraction for data schema definition that is not bound to a particular programming language or platform.
 This abstraction is known as [DSL (domain-specific language)](http://en.wikipedia.org/wiki/Domain-specific_language).
 Having such a DSL, we can define data schema for a particular application. The definition, in turn, can be expressed in multiple forms, but often
 serialization frameworks support a single form, which is well suited for its DSL. Too complicated? Here is one well-known example: XSD and XML.
 XSD defines a DSL, XML is (recommended) to define documents matching the XSD schema. But, you can also use `xsd.exe` to generate DTO classes matching the XSD,
 hence the generated classes are just another form. Note that your can generate XML from DTOs and vice versa and they will be semantically identical,
-because the semantic is common: it is defined with the XSD. Let's summarize: a serialization framework provides you with a DSL, which you use to
-define as many data schemas as you want in a certain format that is best supported by the given framework.
+because the semantic is common: it is defined with the XSD. Summarizing: a serialization framework provides you with a DSL, which you use to
+define data schemas in a certain format that is supported best by the given framework.
 
-The schema abstraction shall be eventually materialized in a programming language. All serialization frameworks provide special tools called code generators.
-They generate code for one of the target programming language, that is needed to represent a data schema in that language. This is ultimately required for
-strongly-typed languages, while it can be optional for duck-typed (dynamic) languages. However, code generation may not be limited to DTOs generation.
-It may also generate some helpful glue code that improves user experience when working with that serialization framework, even for dynamic languages.
-Most common example is generating so called proxy code that hides some implementation details.
+The abstract data schema shall be eventually materialized into a set of entities expressed in a programming language. All serialization frameworks provide special tools called code generators.
+They generate all supporting code for target programming languages, which is needed to clients to work with schematized data: DTOs, proxy, etc. This is ultimately required for
+strongly-typed languages, while it can be optional for duck-typed (dynamic) languages. 
 
-The second matter is the data persistence on the wire. The actual data shall be eventually serialized into raw bytes or text and deserialized back.
+The last but not least matter is the data persistence on the wire. The actual data shall be eventually serialized into raw bytes (or text) and deserialized back.
 All serialization frameworks provide another abstraction here called protocols. A protocol defines a set of rules that define how structured data
 should be serialized or deserialized in according with its schema. Each protocol is normally implemented for all programming languages and platforms
 supported by given serialization framework. The more programming languages/platforms it supports, the more implementations it shall provide.
 Imagine a framework is willing to support JSON protocol, then it must provide JSON reader/writer for say C#, C++, Windows, Linux, etc.
 
-Let's summarize: any modern data serialization framework provides all of the following:
+Putting all together: any modern data serialization framework provides you with the following:
 
 * Abstractions: DSL and Protocols
 * Code generation tools
 * Protocol implementations
 
-Microsoft Bond is a modern data serialization framework. It provides powerful DSL and flexible protocols, code generators for C++ and C#,
-efficient protocol implementations for Windows, Linux and Mac OS X.
+Microsoft Bond is a modern data serialization framework. It provides powerful DSL and flexible protocols, code generators for C++ and C#, efficient protocol implementations for Windows, Linux and Mac OS X.
 
-For several years, Bond remained an internal use only technology, but since Microsoft started being Open Source, Bond has been made available on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)). 
+For several years, Bond remained an internal use only technology, but thanks to Microsoft Open Source initiative, Bond has been made available on GitHub: [Microsoft Bond]((https://github.com/Microsoft/bond)). 
 
 ### Competitors
 
